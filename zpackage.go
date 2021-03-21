@@ -106,9 +106,6 @@ func (p *ZPackage) ReadString() (string, error) {
 	}
 
 	data := make([]byte, length, length)
-	for i := 0; i < length; i++ {
-		data[i] = 0
-	}
 	if err := p.read(&data); err != nil {
 		return "", err
 	}
@@ -132,9 +129,6 @@ func (p *ZPackage) ReadByteArray() ([]byte, error) {
 	}
 
 	data := make([]byte, count, count)
-	for i := 0; i < int(count); i++ {
-		data[i] = 0
-	}
 	if err := p.read(&data); err != nil {
 		return nil, err
 	}
