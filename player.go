@@ -94,6 +94,7 @@ func (p *PlayerProfile) readPlayerProfile(pkg *ZPackage) error {
 		return fmt.Errorf("cannot read player world data count: %w", err)
 	}
 
+	p.WorldData = make(map[int64]WorldPlayerData)
 	for i := 0; i < worldPlayerDataCount; i++ {
 		key, err := pkg.ReadLong()
 		if err != nil {

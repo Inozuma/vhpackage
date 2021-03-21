@@ -14,7 +14,7 @@ func main() {
 	flag.Parse()
 
 	if flag.NArg() == 0 {
-		log.Fatalf("usage: %s world_file.fwl", os.Args[0])
+		log.Fatalf("usage: %s world_file.fwl [world_file.db]", os.Args[0])
 	}
 
 	metaPath := flag.Arg(0)
