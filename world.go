@@ -117,7 +117,7 @@ func (w *World) readMetadata(pkg *ZPackage) error {
 		if err != nil {
 			return fmt.Errorf("Failed to read world generation version: %w", err)
 		}
-		genVersion = int(v)
+		genVersion = v
 	}
 
 	w.Metadata = &WorldMetadata{

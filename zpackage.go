@@ -3,6 +3,7 @@ package vhpackage
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"io"
 )
 
@@ -163,6 +164,39 @@ func (p *ZPackage) ReadQuaternion() (q Quaternion, err error) {
 	q.Z, err = p.ReadSingle()
 	q.W, err = p.ReadSingle()
 	return q, err
+}
+
+func (p *ZPackage) ReadIntoList(l interface{}) error {
+	count, err := p.ReadInt()
+	if err != nil {
+		return err
+	}
+
+	switch x := l.(type) {
+	case (*[]string):
+		*x = make([]string, count)
+		for i := 0; i < count; i++ {
+			(*x)[i], err = p.ReadString()
+			if err != nil {
+				return err
+			}
+		}
+
+	case (*[]int):
+		int32s := make([]int32, count)
+		if err := p.read(&int32s); err != nil {
+			return err
+		}
+		*x = make([]int, count)
+		for i, v := range int32s {
+			(*x)[i] = int(v)
+		}
+
+	default:
+		return fmt.Errorf("cannot read into list of type %T", l)
+	}
+
+	return nil
 }
 
 func (p *ZPackage) read(data interface{}) error {
