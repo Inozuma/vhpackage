@@ -111,7 +111,7 @@ func NewPlayerProfileFromFile(file string) (*PlayerProfile, error) {
 }
 
 func NewPlayerProfileFromData(data []byte) (*PlayerProfile, error) {
-	pkg := NewZPackage(data)
+	pkg := NewZPackageFromData(data)
 
 	playerPkg, err := pkg.ReadPackage()
 	if err != nil {

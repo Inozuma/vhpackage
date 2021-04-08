@@ -1,6 +1,9 @@
 package vhpackage
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // ZDO represents a data object.
 type ZDO struct {
@@ -241,6 +244,23 @@ type Vector3 struct {
 // Vector2i represents Unity.Vector2i type.
 type Vector2i struct {
 	X, Y int32
+}
+
+// Vector2 represents Unity.Vector2 type.
+type Vector2 struct {
+	X, Y float32
+}
+
+func NewVector2(x, y float32) *Vector2 {
+	return &Vector2{x, y}
+}
+
+func (v *Vector2) SqrtMagnitude() float32 {
+	return v.X*v.X + v.Y*v.Y
+}
+
+func (v *Vector2) Magnitude() float32 {
+	return float32(math.Sqrt(float64(v.SqrtMagnitude())))
 }
 
 // Quaternion represents Unity.Quaternion type.

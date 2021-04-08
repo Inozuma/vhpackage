@@ -74,7 +74,7 @@ func (w *World) loadMetadata(file string) error {
 		return err
 	}
 
-	pkg := NewZPackage(filedata)
+	pkg := NewZPackageFromData(filedata)
 	pkg, err = pkg.ReadPackage()
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func (w *World) loadData(file string) error {
 		return err
 	}
 
-	pkg := NewZPackage(filedata)
+	pkg := NewZPackageFromData(filedata)
 	return w.readData(pkg)
 }
 
