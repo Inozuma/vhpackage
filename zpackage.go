@@ -11,11 +11,31 @@ import (
 // Read binary in Little Endian order.
 type ZPackage struct {
 	r io.Reader
+	w io.Writer
 }
 
-func NewZPackage(data []byte) *ZPackage {
+func NewZPackageFromData(data []byte) *ZPackage {
 	return &ZPackage{
 		r: bytes.NewReader(data),
+	}
+}
+
+func NewZPackageReader(r io.Reader) *ZPackage {
+	return &ZPackage{
+		r: r,
+	}
+}
+
+func NewZPackageWriter(w io.Writer) *ZPackage {
+	return &ZPackage{
+		w: w,
+	}
+}
+
+func NewZPackage(rw io.ReadWriter) *ZPackage {
+	return &ZPackage{
+		r: rw,
+		w: rw,
 	}
 }
 
@@ -120,7 +140,7 @@ func (p *ZPackage) ReadPackage() (*ZPackage, error) {
 		return nil, err
 	}
 
-	return NewZPackage(data), nil
+	return NewZPackageFromData(data), nil
 }
 
 func (p *ZPackage) ReadByteArray() ([]byte, error) {
@@ -201,4 +221,36 @@ func (p *ZPackage) ReadIntoList(l interface{}) error {
 
 func (p *ZPackage) read(data interface{}) error {
 	return binary.Read(p.r, binary.LittleEndian, data)
+}
+
+func (p *ZPackage) WriteByte(b uint8) error {
+	return p.write(b)
+}
+
+func (p *ZPackage) WriteInt(n int) error {
+	return p.write(int32(n))
+}
+
+func (p *ZPackage) WriteSingle(f float32) error {
+	return p.write(f)
+}
+
+func (p *ZPackage) WriteBool(b bool) error {
+	return p.write(b)
+}
+
+func (p *ZPackage) WriteString(s string) error {
+	v := (uint)(len(s))
+	for v >= 0x80 {
+		p.write((byte)(v | 0x80))
+		v >>= 7
+	}
+	if err := p.write((byte)(v)); err != nil {
+		return err
+	}
+	return p.write([]byte(s))
+}
+
+func (p *ZPackage) write(v interface{}) error {
+	return binary.Write(p.w, binary.LittleEndian, v)
 }
